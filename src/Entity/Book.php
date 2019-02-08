@@ -41,6 +41,22 @@ class Book
      */
     private $availibility;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="books")
+     */
+    private $user;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="books")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
+    /**
+     * @ORM\OneToOne(targetEntity="App\Entity\Image", cascade={"persist", "remove"}, fetch="EAGER")
+     */
+    private $image;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -102,6 +118,42 @@ class Book
     public function setAvailibility(bool $availibility): self
     {
         $this->availibility = $availibility;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getCategory(): ?Category
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?Category $category): self
+    {
+        $this->category = $category;
+
+        return $this;
+    }
+
+    public function getImage(): ?Image
+    {
+        return $this->image;
+    }
+
+    public function setImage(?Image $image): self
+    {
+        $this->image = $image;
 
         return $this;
     }
