@@ -14,8 +14,8 @@ class UserType extends AbstractType
         $builder
             ->add('firstname')
             ->add('lastname')
-            ->add('identifiant')
-            ->add('nb_book')
+            // ->add('identifiant')
+            // ->add('nb_book')
         ;
     }
 
@@ -23,6 +23,7 @@ class UserType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'translation_domain' => 'forms'
         ]);
     }
 }
