@@ -1,38 +1,81 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Ma bibliothèque | {{ user.firstname }}{% endblock %}
 
 {% block body %}
-    <h1>User</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
-                <th>Firstname</th>
-                <td>{{ user.firstname }}</td>
-            </tr>
-            <tr>
-                <th>Lastname</th>
-                <td>{{ user.lastname }}</td>
-            </tr>
-            <tr>
-                <th>Identifiant</th>
-                <td>{{ user.identifiant }}</td>
-            </tr>
-            <tr>
-                <th>Nb_book</th>
-                <td>{{ user.nbBook }}</td>
-            </tr>
-        </tbody>
-    </table>
+    {% include 'includes/_nav.html.twig' %}
 
-    <a href="{{ path('user_index') }}">back to list</a>
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
 
-    <a href="{{ path('user_edit', {'id': user.id}) }}">edit</a>
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:300px">
 
-    {{ include('user/_delete_form.html.twig') }}
+        <div class="w3-container">
+            <!-- Header -->
+            <div>
+                {# @include('includes.nav_mobile') #}
+                <div class="w3-container">
+                    <h1 class="w3-center">
+                        <b>Ma bibliothèque</b>
+                    </h1>
+
+                    {% include 'includes/_alert.html.twig' %}
+
+                    <div class="w3-bottombar w3-padding-16 w3-section">
+
+                        <a href="{{path('user_new')}}" class="w3-button w3-black">Ajouter un utilisateur</a>
+                    </div>
+
+                    <div class="w3-container w3-row">
+                        <h2>Détails de l'utilisateur</h2>
+
+                        <a href="{{app.request.headers.get('referer')}}" class="w3-button w3-black">Retour</a>
+
+                        <div class="w3-row">
+                            <p class="w3-col">
+                                <b>Nom :</b>
+                                <br>{{ user.lastname }}</p>
+                            <p class="w3-col">
+                                <b>Prénom :</b>
+                                <br>{{ user.firstname }}</p>
+                            <p class="w3-col">
+                                <b>Identifiant :</b>
+                                <br>{{ user.identifiant }}</p>
+                            <p class="w3-col">
+                                <b>Nombre d'emprunts :</b>
+                                <br>{{ user.nbBook }}</p>
+                            <p class="w3-col">
+                                <b>Livres empruntés :</b>
+                                <br>
+
+                                {% if user.nbBook == 0 %}
+                                    Aucun emprunt en cours
+                                {% else %}
+                                    {% for book in user.books %}
+                                        <span class="w3-margin-right"><a href="{{path('book_show', {id: book.id})}}">{{ book.title }}</a></span>
+                                    {% endfor %}
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class=" w3-padding-16 w3-section w3-row">
+
+                <a href="{{path('user_edit', {identifiant:user.identifiant})}}" class="w3-col m2 l2 w3-button w3-black">Modifier</a>
+                    <form class="w3-col m1 w3-margin-left" action="{{path('user_delete', {id:user.id})}}" method="post" onsubmit="return confirm('Êtes-vous sûr?')">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <input type="hidden" name="_token" value="{{csrf_token('delete' ~ user.id)}}">
+                    <input type="submit" name="delete" value="Supprimer l'utilisateur" class="w3-button w3-red">
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
 {% endblock %}

@@ -1,11 +1,45 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Book{% endblock %}
+{% block title %}Hello!{% endblock %}
 
 {% block body %}
-    <h1>Create new Book</h1>
 
-    {{ include('book/_form.html.twig') }}
+<!-- Sidebar/menu -->
+{% include 'includes/_nav.html.twig' %}
 
-    <a href="{{ path('book_index') }}">back to list</a>
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px">
+
+    <div id="books" class="w3-container" style="display: block">
+
+        <!-- Header -->
+        <div>
+            {# @include('includes.nav_mobile') #}
+            <div class="w3-container">
+                <h1 class="w3-center">
+                    <b>Ma bibliothèque</b>
+                </h1>
+
+                {% include 'includes/_alert.html.twig'%}
+
+                <div class="w3-bottombar w3-padding-16 w3-section">
+
+                    <a href="{{app.request.headers.get('referer')}}" class="w3-button w3-black">Retour</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="w3-container w3-row">
+            <h3 class="w3-center">Ajouter un livre</h3>
+
+            {% include 'book/_form.html.twig' with {'submit' : 'Ajouter un livre'} %}
+        </div>
+
+    </div>
+
+</div>
 {% endblock %}
