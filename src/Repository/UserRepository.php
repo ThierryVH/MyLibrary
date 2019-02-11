@@ -19,6 +19,22 @@ class UserRepository extends ServiceEntityRepository
         parent::__construct($registry, User::class);
     }
 
+    /**
+     * Check if random string for identifiant already exists
+     *
+     * @param string $randomIdentifiant
+     * @return boolean
+     */
+    public function checkIfRandomExists(string $randomIdentifiant)
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.identifiant = :identifiant')
+            ->setParameter('identifiant', $randomIdentifiant)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+
     // /**
     //  * @return User[] Returns an array of User objects
     //  */
@@ -36,15 +52,15 @@ class UserRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?User
+    
+    public function findOneById($id): ?User
     {
         return $this->createQueryBuilder('u')
-            ->andWhere('u.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('u.id = :id')
+            ->setParameter('id', $id)
             ->getQuery()
             ->getOneOrNullResult()
         ;
     }
-    */
+    
 }
