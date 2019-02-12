@@ -17,7 +17,8 @@
     </div>
     <div class="col-5">
 {% if book.image.name is defined %}
-<img width="80" src="{{ asset('uploads/images/') ~ book.img.name }}">
+<img width="80" src="{{ asset('uploads/images/') ~ book.image.name }}">
+    
 {% endif %}
     
     </div>

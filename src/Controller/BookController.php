@@ -48,7 +48,7 @@ class BookController extends AbstractController
         $books = $paginator->paginate(
             $this->bookRepository->findAllByPagination($category), /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
-            8/*limit per page*/
+            20/*limit per page*/
         );
         return $this->render('book/index.html.twig', [
             'books' => $books,
@@ -79,13 +79,13 @@ class BookController extends AbstractController
 
             $em = $this->getDoctrine()->getManager();
 
-            if ($request->files->get('book')['img']['name'] !== null) {
+            if ($request->files->get('book')['image']['name'] !== null) {
                 
-                $file = $request->files->get('book')['img']['name'];
-                // $alt = $request->request->get('book')['img']['alt'];
+                $file = $request->files->get('book')['image']['name'];
+                // $alt = $request->request->get('book')['image']['alt'];
                 
-                // $file = $book->getImg()->getName();
-                $alt = $book->getImg()->getAlt();
+                // $file = $book->getImage()->getName();
+                $alt = $book->getImage()->getAlt();
                 
     
                 $fileName = $this->generateUniqueFileName() . '.' . $file->guessExtension();
@@ -104,11 +104,11 @@ class BookController extends AbstractController
                 $image->setName($fileName);
                 $image->setAlt($alt);
     
-                $book->setImg($image);
+                $book->setImage($image);
 
                 $em->persist($image);
             } else {
-                $book->setImg(null);
+                $book->setImage(null);
             }
 
 
@@ -162,9 +162,9 @@ class BookController extends AbstractController
 
         $imageExists = false;
 
-        if ($book->getImg()) {
+        if ($book->getImage()) {
             $imageExists = true;
-            $image = $book->getImg();
+            $image = $book->getImage();
             $fileName = $image->getName();
             $alt = $image->getAlt();
         } else {
@@ -178,16 +178,16 @@ class BookController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             
             // If file is sent
-            if ($form->getData('book')->getImg()->getName() !== "FOO") {
+            if ($form->getData('book')->getImage()->getName() !== "FOO") {
 
                 if ($imageExists) {
                     unlink($this->getParameter('images_directory') . '/' .$fileName);
                 }
     
                 // We catch the file
-                $originalFile = $request->files->get('book')['img']['name'];
+                $originalFile = $request->files->get('book')['image']['name'];
                 
-                $alt = $book->getImg()->getAlt();
+                $alt = $book->getImage()->getAlt();
     
     
                 $fileName = $this->generateUniqueFileName() . '.' . $originalFile->guessExtension();
@@ -204,7 +204,7 @@ class BookController extends AbstractController
     
                 $image->setName($fileName);
                 $image->setAlt($alt);
-                $book->setImg($image);
+                $book->setImage($image);
                 $this->getDoctrine()->getManager()->persist($image);
 
                 dump('test');
@@ -212,10 +212,10 @@ class BookController extends AbstractController
                 $image->setName($fileName);
                 $image->setAlt($alt);
                 dump($image);
-                $book->setImg($image);
+                $book->setImage($image);
                 $this->getDoctrine()->getManager()->persist($image);
             } else {
-                $book->setImg(null);
+                $book->setImage(null);
             }
 
             $this->getDoctrine()->getManager()->persist($book);
@@ -243,11 +243,24 @@ class BookController extends AbstractController
     public function delete(Request $request, Book $book): Response
     {
         if ($this->isCsrfTokenValid('delete'.$book->getId(), $request->request->get('_token'))) {
+
+            if($book->getAvailability() !== 1) {
+                $this->addFlash(
+                    'error',
+                    'Le livre ne peut pas être supprimé tant qu\'il est emprunté par un utilisateur'
+                );
+
+                return $this->render('book/show.html.twig', [
+                    'book' => $book,
+                    'users' => $this->userRepository->findAll()
+                ]);
+
+            }
             $em = $this->getDoctrine()->getManager();
             $em->remove($book);
-            if ($book->getImg()) {
-                unlink($this->getParameter('images_directory') . '/' . $book->getImg()->getName());
-                $em->remove($book->getImg());
+            if ($book->getImage()) {
+                unlink($this->getParameter('images_directory') . '/' . $book->getImage()->getName());
+                $em->remove($book->getImage());
             }
             $em->flush();
 

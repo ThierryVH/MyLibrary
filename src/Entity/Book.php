@@ -39,7 +39,7 @@ class Book
     /**
      * @ORM\Column(type="boolean")
      */
-    private $availibility;
+    private $availability = 1;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\User", inversedBy="books")
@@ -110,14 +110,14 @@ class Book
         return $this;
     }
 
-    public function getAvailibility(): ?bool
+    public function getAvailability(): ?bool
     {
-        return $this->availibility;
+        return $this->availability;
     }
 
-    public function setAvailibility(bool $availibility): self
+    public function setAvailability(bool $availability): self
     {
-        $this->availibility = $availibility;
+        $this->availability = $availability;
 
         return $this;
     }
@@ -154,6 +154,33 @@ class Book
     public function setImage(?Image $image): self
     {
         $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Borrow book
+     *
+     * @param User $user
+     * @return self
+     */
+    public function borrowBook(User $user)
+    {
+        $this->availability = 0;
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Return book
+     *
+     * @return self
+     */
+    public function returnBook()
+    {
+        $this->availability = 1;
+        $this->user = null;
 
         return $this;
     }

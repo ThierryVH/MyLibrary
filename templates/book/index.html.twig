@@ -71,12 +71,12 @@
                                     <div class="image-card">
 
                                         <img 
-                                        {% if book.img %} 
-                                            src="{{asset('uploads/images/') ~ book.img.name}}" alt="{{ book.img.alt}}" 
+                                        {% if book.image %} 
+                                            src="{{asset('uploads/images/') ~ book.image.name}}" alt="{{ book.image.alt}}"
                                         {% else %} 
                                             src="{{asset('uploads/images/default.png')}}" alt="Image par défaut" 
                                         {% endif %} 
-                                        class="image-card" width="100%">
+                                        class="image-card" width="auto" height="214px">
     
 
     
@@ -94,6 +94,11 @@
 
 
             </div>
+
+{# display navigation #}
+<div class="w3-container w3-row">
+    {{ knp_pagination_render(books) }}
+</div>
 
         </div>
 

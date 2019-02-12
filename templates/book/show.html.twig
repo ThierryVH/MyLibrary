@@ -58,8 +58,8 @@
                                 {# <img src="{{ asset('storage/images/') . '/' . $book->path }}" alt="{{ $book->alt }}" class="image-card"> #}
 
                                 <img 
-                                {% if book.img %} 
-                                    src="{{asset('uploads/images/') ~ book.img.name}}" alt="{{ book.img.alt}}"  
+                                {% if book.image %}
+                                    src="{{asset('uploads/images/') ~ book.image.name}}" alt="{{ book.image.alt}}"
                                 {% else %} 
                                     src="{{asset('uploads/images/default.png')}}" alt="Image par défaut"  
                                 {% endif %} 

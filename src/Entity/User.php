@@ -36,7 +36,7 @@ class User
     /**
      * @ORM\Column(type="integer")
      */
-    private $nb_book;
+    private $nb_book = 0;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Book", mappedBy="user")
@@ -48,55 +48,69 @@ class User
         $this->books = new ArrayCollection();
     }
 
-    public function getId(): ?int
+    public function getId() : ? int
     {
         return $this->id;
     }
 
-    public function getFirstname(): ?string
+    public function getFirstname() : ? string
     {
         return $this->firstname;
     }
 
-    public function setFirstname(string $firstname): self
+    public function setFirstname(string $firstname) : self
     {
         $this->firstname = $firstname;
 
         return $this;
     }
 
-    public function getLastname(): ?string
+    public function getLastname() : ? string
     {
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): self
+    public function setLastname(string $lastname) : self
     {
         $this->lastname = $lastname;
 
         return $this;
     }
 
-    public function getIdentifiant(): ?string
+    public function getIdentifiant() : ? string
     {
         return $this->identifiant;
     }
 
-    public function setIdentifiant(string $identifiant): self
+    public function setIdentifiant(string $identifiant) : self
     {
         $this->identifiant = $identifiant;
 
         return $this;
     }
 
-    public function getNbBook(): ?int
+    public function getNbBook() : ? int
     {
         return $this->nb_book;
     }
 
-    public function setNbBook(int $nb_book): self
+    public function setNbBook(int $nb_book) : self
     {
         $this->nb_book = $nb_book;
+
+        return $this;
+    }
+
+    public function borrowBook()
+    {
+        $this->nb_book++;
+
+        return $this;
+    }
+
+    public function returnBook()
+    {
+        $this->nb_book--;
 
         return $this;
     }
@@ -104,12 +118,12 @@ class User
     /**
      * @return Collection|Book[]
      */
-    public function getBooks(): Collection
+    public function getBooks() : Collection
     {
         return $this->books;
     }
 
-    public function addBook(Book $book): self
+    public function addBook(Book $book) : self
     {
         if (!$this->books->contains($book)) {
             $this->books[] = $book;
@@ -119,7 +133,7 @@ class User
         return $this;
     }
 
-    public function removeBook(Book $book): self
+    public function removeBook(Book $book) : self
     {
         if ($this->books->contains($book)) {
             $this->books->removeElement($book);
