@@ -11,6 +11,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Category
 {
+    const CATEGORIES = ['Bande_Dessinee', 'Polar', 'Thriller', 'Amour', 'Science_Fiction'];
+
     /**
      * @ORM\Id()
      * @ORM\GeneratedValue()

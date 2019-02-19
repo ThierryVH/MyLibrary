@@ -27,7 +27,7 @@ class BookRepository extends ServiceEntityRepository
      * @return Query 
      * 
      */
-    public function findAllByPagination(Category $category = NULL)
+    public function findAllByPagination($category = NULL)
     {
         if ($category) {
             return $this->createQueryBuilder('b')
