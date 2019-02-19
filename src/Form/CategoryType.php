@@ -48,7 +48,7 @@ class CategoryType extends AbstractType
         ];
 
         foreach ($choices as $key => $value) {
-            $output[$value->getName()] = $value;
+            $output[$value->getName()] = $value->getId();
         }
 
         return $output;

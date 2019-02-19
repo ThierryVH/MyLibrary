@@ -48,12 +48,8 @@ class BookController extends AbstractController
         $form = $this->createForm(CategoryType::class, $category);
         $form->handleRequest($request);
 
-        // $categories = $this->categoryRepository->findAll();
-        // $categories = Category::CATEGORIES;
-        $category = $this->categoryRepository->findOneByName($request->query->get('category'));
-
         $books = $paginator->paginate(
-            $this->bookRepository->findAllByPagination($category), /* query NOT result */
+            $this->bookRepository->findAllByPagination($category->getName()), /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
             8/*limit per page*/
         );
