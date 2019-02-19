@@ -6,6 +6,7 @@ use App\Entity\Book;
 use App\Entity\Category;
 use App\Entity\Image;
 use App\Form\BookType;
+use App\Form\CategoryType;
 use App\Repository\BookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
@@ -42,17 +43,24 @@ class BookController extends AbstractController
      */
     public function index(PaginatorInterface $paginator, Request $request): Response
     {
-        $categories = $this->categoryRepository->findAll();
-        $category = $this->categoryRepository->findOneByName($request->request->get('category'));
+        $category = new Category();
+
+        $form = $this->createForm(CategoryType::class, $category);
+        $form->handleRequest($request);
+
+        // $categories = $this->categoryRepository->findAll();
+        // $categories = Category::CATEGORIES;
+        $category = $this->categoryRepository->findOneByName($request->query->get('category'));
 
         $books = $paginator->paginate(
             $this->bookRepository->findAllByPagination($category), /* query NOT result */
             $request->query->getInt('page', 1)/*page number*/,
-            20/*limit per page*/
+            8/*limit per page*/
         );
         return $this->render('book/index.html.twig', [
             'books' => $books,
-            'categories' => $categories
+            'form' => $form->createView()
+            // 'categories' => $categories
             ]);
     }
 
