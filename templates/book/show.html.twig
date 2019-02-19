@@ -1,0 +1,143 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ma bibliothèque | Détails {{ book.title }}!{% endblock %}
+
+{% block body %}
+
+    {% include 'includes/_nav.html.twig' %}
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:300px">
+
+        <div id="books" class="w3-container" style="display: block">
+
+            <!-- Header -->
+            <div>
+                <div class="w3-container">
+                    <h1 class="w3-center">
+                        <b>Ma Bibliothèque</b>
+                    </h1>
+
+                    {% include 'includes/_alert.html.twig' %}
+
+                    <div class="w3-bottombar w3-padding-16 w3-section">
+
+                        <a href="{{path('book_new')}}" class="w3-button w3-black">Ajouter un livre</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="w3-container w3-row">
+                <h2>Détails du livre</h2>
+
+                <a href="{{app.request.headers.get('referer')}}" class="w3-button w3-black">Retour</a>
+
+                <div class="w3-row w3-margin-top">
+                    <p>État:
+                        {% if book.availability == 1 %}
+                            Disponible
+                        {% else %}
+
+                            Non disponible. Le livre est emprunté par
+                            <a href="{{path('user_show', {identifiant:book.user.identifiant})}}">{{book.user.firstname}} {{book.user.lastname}}</a>
+
+                        {% endif %}
+                    </p>
+                </div>
+
+                <div class="w3-row">
+                    <div class="w3-col m8 l4 margin-auto">
+
+                        <div class="square ">
+                            <div class="image-card">
+
+                                {# <img src="{{ asset('storage/images/') . '/' . $book->path }}" alt="{{ $book->alt }}" class="image-card"> #}
+
+                                <img 
+                                {% if book.image %}
+                                    src="{{asset('uploads/images/') ~ book.image.name}}" alt="{{ book.image.alt}}"
+                                {% else %} 
+                                    src="{{asset('uploads/images/default.png')}}" alt="Image par défaut"  
+                                {% endif %} 
+                                class="image-card" width="100%">
+    
+
+                            </div>
+                        </div>
+                    </div>
+                    <div class="w3-col m12 l8 w3-padding">
+                        <p>
+                            <b>Titre :</b>
+                            <br>{{ book.title }}</p>
+                        <p>
+                            <b>Auteur :</b>
+                            <br>{{ book.author }}</p>
+                        <p>
+                            <b>Date de parution :</b>
+                            <br>{{ book.releasedate | date("d/m/Y") }}</p>
+                        <p>
+                            <b>Genre :</b>
+                            <br>{{ book.category.name }}</p>
+                        <p>
+                            <b>Résumé :</b>
+                            <br>{{ book.summary }}</p>
+
+                    </div>
+
+                </div>
+
+                <div class="w3-row">
+                    <div class=" w3-padding-16 w3-section w3-row">
+
+                        {% if book.availability == 1 %}
+                        <form class="w3-row w3-margin-bottom" action="{{path('book_borrow', {id:book.id})}}" method="post">
+
+                            <!-- <input type="text" name="user_identifiant" placeholder="identifiant de l'utilisateur" class="w3-input w3-col m3"> -->
+                            <select class="w3-input w3-col m5 l3" name="user_id">
+                                <option value="" disabled="disabled">Choisissez un utilisateur</option>
+                                {% for user in users %}
+                                    <option value="{{ user.id }}">{{ user.lastname}}
+                                        {{ user.firstname }}
+                                        --
+                                        {{ user.identifiant }}
+                                        --
+                                    </option>
+                                {% endfor %}
+                            </select>
+                            <input type="submit" name="borrow" value="Emprunter le livre" class="w3-button w3-black w3-col m7 l2">
+
+                        </form>
+
+                        {% else %}
+
+                        <form class="w3-row" action="{{path('book_return', {id:book.id})}}" method="post">
+
+                            <input type="submit" name="return" value="Restituer" class="w3-button w3-black w3-col l2 m12">
+                        </form>
+
+                        {% endif %}
+
+                    </div>
+                    <div class=" w3-section w3-row">
+
+                        <a href="{{path('book_edit', {id: book.id})}}" class="w3-col m5 l2 w3-button w3-black">Modifier</a>
+
+                            <form action="{{path('book_delete', {id: book.id})}}" method="post" onsubmit="return confirm('Êtes-vous sûr?')">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ book.id)}}">
+                            <input type="submit" name="delete" value="Supprimer le livre" class="w3-button w3-red w3-col m5 l2 w3-margin-left">
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}

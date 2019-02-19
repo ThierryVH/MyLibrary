@@ -1,0 +1,90 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ma bibliothèque | Utilisateurs{% endblock %}
+
+{% block body %}
+
+    <!-- Sidebar/menu -->
+    {% include 'includes/_nav.html.twig' %}
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:300px">
+
+        <div id="users" class="w3-container">
+            <!-- Header -->
+            <div>
+                <a href="#"><img src="..." style="width:65px;" class="w3-circle w3-right w3-margin w3-hide-large w3-hover-opacity"></a>
+                <span class="w3-button w3-hide-large w3-xxlarge w3-hover-text-grey" onclick="w3_open()">
+                    <i class="fa fa-bars"></i>
+                </span>
+                <div class="w3-container">
+                    <h1 class="w3-center">
+                        <b>Ma Bibliothèque</b>
+                    </h1>
+
+                    {% include 'includes/_alert.html.twig' %}
+
+                    <div class="w3-bottombar w3-padding-16 w3-section">
+
+                        <a href="{{path('user_new')}}" class="w3-button w3-black">Ajouter un utilisateur</a>
+                    </div>
+
+                    <div class="w3-container w3-row">
+                        <h2>Liste des utilisateurs</h2>
+
+                        <div class="w3-margin-bottom">
+
+                            <button onclick="accordionSearch('search')" class="w3-button w3-padding w3-black">Rechercher</button>
+
+                            <div id="search" class="w3-section w3-padding-16" style="display: none;">
+                                <span class="w3-margin-right">Recherche:</span>
+                                <form class="w3-row" action="" method="post">
+
+                                    <input type="text" name="name" value="" class="w3-input w3-margin-bottom w3-col s12 m6" placeholder="Entrez un nom ou un identifiant" required="required">
+                                    <input type="submit" name="search_by" class="w3-button w3-grey w3-margin-left w3-col m2 w3-hide-small" value="Par nom">
+                                    <input type="submit" name="search_by" class="w3-button w3-grey w3-margin-left w3-col m3 l2 w3-hide-small" value="Par identifiant">
+                                    <input type="submit" name="search_by" class="w3-button w3-grey w3-margin-bottom w3-col w3-hide-medium w3-hide-large" value="Par nom">
+                                    <input type="submit" name="search_by" class="w3-button w3-grey w3-margin-bottom w3-col w3-hide-medium w3-hide-large" value="Par identifiant">
+                                </form>
+                                <form class="w3-row" action="" method="post">
+
+                                    <input type="submit" name="search_by" class="w3-button w3-black w3-col s12 m6" value="Tous les utilisateurs">
+                                </form>
+                            </div>
+
+                        </div>
+
+                        <table class="w3-table-all w3-hoverable w3-card-4">
+                            <tr>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>N° Identifiant</th>
+                                <th>Livres empruntés</th>
+                                <th></th>
+                            </tr>
+
+                            {% for user in users %}
+                                <tr>
+                                    <td>{{ user.lastname }}</td>
+                                    <td>{{ user.firstname }}</td>
+                                    <td>{{ user.identifiant }}</td>
+                                    <td>{{ user.nbBook }} livre(s)</td>
+                                    <td>
+                                        <a href="{{ path('user_show', {identifiant : user.identifiant}) }}">détails</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </table>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

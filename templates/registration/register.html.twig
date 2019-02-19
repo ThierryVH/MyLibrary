@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+
+<main class="w3-row">
+<h1 class="w3-center">Inscription</h1>
+    <div class="w3-col s12 m6 l4 w3-padding login">
+
+    {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.username) }}
+        {{ form_row(registrationForm.plainPassword) }}
+        {# {{ form_row(registrationForm.passwordConfirmation) }}
+
+{% for label, messages in app.flashes %}
+    {% for message in messages %}
+        <div class="flash-{{ label }}">
+            {{ message }}
+        </div>
+    {% endfor %}
+{% endfor %} #}
+
+        <input type="submit" class="btn" value="S'inscrire">
+    {{ form_end(registrationForm) }}
+
+    </div>
+    </main>
+{% endblock %}
